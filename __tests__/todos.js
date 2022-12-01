@@ -4,12 +4,13 @@ const db = require("../models/index");
 const app = require("../app");
 let server, agent;
 
+//function to extract csrf token
 function extractCsrfToken(response) {
   var $ = cheerio.load(response.text);
   return $("[name=_csrf]").val();
 }
 
-describe("Testing Todo ", () => {
+describe("Testing the Todo ", () => {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
     server = app.listen(4000, () => {});
@@ -19,7 +20,8 @@ describe("Testing Todo ", () => {
     await db.sequelize.close();
     server.close();
   });
-  test("To Create new todo...", async () => {
+  //Test
+  test("Creating a New Todo...", async () => {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
@@ -31,7 +33,9 @@ describe("Testing Todo ", () => {
     expect(response.statusCode).toBe(422);
   });
 
-  test("To update the completed field of todo list : ", async () => {
+  // Test for false to true
+
+  test("To update the completed field of a given todo list : ", async () => {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
@@ -41,17 +45,20 @@ describe("Testing Todo ", () => {
       _csrf: csrfToken,
     });
 
+    // the above added todo is second in the list of newly added todos
     const todoID = await agent.get("/todos").then((response) => {
       const parsedResponse1 = JSON.parse(response.text);
       return parsedResponse1[1]["id"];
     });
 
+    // Testing for false to true
     const setCompletionResponse1 = await agent
       .put(`/todos/${todoID}`)
       .send({ completed: true, _csrf: csrfToken });
     const parsedUpdateResponse3 = JSON.parse(setCompletionResponse1.text);
     expect(parsedUpdateResponse3.completed).toBe(true);
 
+    // Testing for true to false
     const setCompletionResponse2 = await agent
       .put(`/todos/${todoID}`)
       .send({ completed: false, _csrf: csrfToken });
@@ -59,13 +66,11 @@ describe("Testing Todo ", () => {
     expect(parsedUpdateResponse2.completed).toBe(false);
   });
 
-  //Test
-
   test("Marking a todo as complete", async () => {
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "You have to do the Home Work ",
+      title: "Do the home work",
       dueDate: new Date().toLocaleString("en-CA"),
       completed: false,
       _csrf: csrfToken,
@@ -90,11 +95,12 @@ describe("Testing Todo ", () => {
     expect(parsedUpdateResponse.completed).toBe(true);
   });
 
+  //Marking a todo as incomplete
   test("Marks a todo with the given ID as incomplete", async () => {
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "Testing is Incomplete",
+      title: "Testing Incomplete",
       dueDate: new Date().toISOString(),
       completed: true,
       _csrf: csrfToken,
@@ -122,11 +128,11 @@ describe("Testing Todo ", () => {
     expect(parsedUpdateResponses.completed).toBe(false);
   });
 
-  test("Delete todo using ID", async () => {
+  test("Delete The Todo using Specific ID", async () => {
     let res = await agent.get("/");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "Done with the exams",
+      title: "Exam is Completed",
       dueDate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
