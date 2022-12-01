@@ -3,11 +3,9 @@ const { Model, Op } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
-    static associate(models) {}
     static addaTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
-
     static getAllTodos() {
       return this.findAll({ order: [["id", "ASC"]] });
     }
