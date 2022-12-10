@@ -1,4 +1,3 @@
-/* eslint-disable */
 const app = require("./app");
 
 // eslint-disable-next-line no-undef
