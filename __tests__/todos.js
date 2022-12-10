@@ -65,7 +65,7 @@ describe("My Todo Manager", function () {
     const res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
-      title: "To complete SE assignment",
+      title: "To Watch Video Lectures",
       dueDate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
@@ -79,7 +79,7 @@ describe("My Todo Manager", function () {
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "Completed OB assignment",
+      title: "Completed Studying for Mids ",
       dueDate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
@@ -111,7 +111,7 @@ describe("My Todo Manager", function () {
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "To complete IPCV assignment",
+      title: "To complete Records",
       dueDate: new Date().toISOString(),
       completed: true,
       _csrf: csrfToken,
