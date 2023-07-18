@@ -1,5 +1,5 @@
 "use strict";
-
+// using strict mode 
 
 const fs = require("fs");
 const path = require("path");
